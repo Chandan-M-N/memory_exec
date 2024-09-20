@@ -1,7 +1,9 @@
 # memory_exec
 
 Clone the repo:
+```shell
   git clone https://github.com/Chandan-M-N/memory_exec.git
+```
 
 Change the directory to downloaded directory.
   cd memory_exec
