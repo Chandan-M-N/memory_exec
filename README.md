@@ -6,11 +6,14 @@ Clone the repo:
 ```
 
 Change the directory to downloaded directory.
+```shell
   cd memory_exec
+```
 
 Run the memory.py file to decrypt the files and run it in memory.
+```shell
   python memory.py
-
+```
 
 1. fn1.py, fn2.py and main.py are files which I used to test.
 2. I encrypted the files fn1.py, fn2.py and main.py
