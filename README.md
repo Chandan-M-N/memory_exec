@@ -10,7 +10,7 @@ Change the directory to downloaded directory.
   cd memory_exec
 ```
 
-Run the memory.py file to decrypt the files and run it in memory.
+Run the memory.py file.
 ```shell
   python memory.py
 ```
