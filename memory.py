@@ -50,38 +50,36 @@ def load_module_from_string(module_name, code):
     print(f"Loaded module {module_name} into memory")
 
 
+def load_module_from_string_for_shared(module_name, code, lib):
+    module = types.ModuleType(module_name)
+    exec(code, module.__dict__, {'shared_lib':lib})  
+    # module.shared_object(lib)
+    sys.modules[module_name] = module
+    print(f"Loaded module {module_name} into memory")
+
 def load_shared_object_from_memory(decrypted_so_data):
+    # Create a temporary file to hold the decrypted .so file
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".so") as temp_so_file:
+        temp_so_file.write(decrypted_so_data)
+        temp_file_path = temp_so_file.name  # Get the temp file path
+
+    
     try:
-        # Create a temporary file to hold the decrypted .so file
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".so") as temp_so_file:
-            temp_so_file.write(decrypted_so_data)
-            temp_file_path = temp_so_file.name  # Get the temp file path
-
-        # Check if the symlink already exists and remove it
-        symlink_path = './libexample.so'
-        if os.path.islink(symlink_path) or os.path.exists(symlink_path):
-            os.remove(symlink_path)
-
-        # Create a symlink to the temporary file
-        os.symlink(temp_file_path, symlink_path)
-
-        # Load the shared object into memory using ctypes
-        lib = ctypes.CDLL(symlink_path)
-
+        lib = ctypes.CDLL(temp_file_path)
         print(f"Shared object loaded successfully from {temp_file_path}")
-        
-        # Cleanup the temporary file
-        os.remove(temp_file_path)
-
         return lib  # Return the handle of the shared object
     except Exception as e:
         print(f"Error while loading shared object from memory: {e}")
         raise Exception("Failed to load shared object from memory")
+    finally:
+        os.remove(temp_file_path)
+        print("Removed tmp file\n")
+
     
 
 print(type(so_code))
-handle = load_shared_object_from_memory(so_code)
-
+lib = load_shared_object_from_memory(so_code)
+print(type(lib))
 dir1 = types.ModuleType('dir1')
 dir2 = types.ModuleType('dir2')
 sys.modules['dir2'] = dir2
@@ -106,9 +104,10 @@ class InMemoryLoader(Loader):
 # Add our custom importer to the front of the meta path
 sys.meta_path.insert(0, InMemoryFinder())
 
-load_module_from_string('fn1',fn1_code)
+load_module_from_string_for_shared('fn1',fn1_code,lib)
 load_module_from_string('fn2',fn2_code)
 # load_module_from_string('config.yaml',config_code)
+print(main_code)
 exec(main_code)
 
 
