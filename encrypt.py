@@ -31,4 +31,4 @@ key = b'\x99M(\xa8JUZ\x1c\xa7\x0biBv\x10w?'
 
 # Encrypt individual files outside directories
 # for a in ['fn1.py', 'fn2.py', 'main.py', 'config.yaml',os.path.join('dir1', 'fn3.py'),os.path.join('dir1', 'fn4.py'),os.path.join('dir2', 'fn5.py'),os.path.join('dir2', 'config2.yaml'),'libexample.so']:
-encrypt_file('fn1.py', f'fn1.py_encrypted', key)
+encrypt_file('main.py', f'main.py_encrypted', key)
